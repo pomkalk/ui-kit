@@ -1197,40 +1197,95 @@ const docs: ComponentDoc[] = [
     slug: 'pagination',
     name: 'Pagination',
     group: 'navigation',
-    description: 'Постраничная навигация с переходом вперед/назад.',
+    description:
+      'Постраничная навигация в стиле Ant Design с поддержкой current/total/pageSize, size changer и quick jumper.',
     examples: [
       ex(
         'Базовая пагинация',
-        'Текущая страница и общее количество.',
+        'Номера страниц с current, total и pageSize.',
+        `<Pagination current={2} total={200} pageSize={20} onChange={() => {}} />`,
+        <UI.Pagination current={2} onChange={noop} pageSize={20} total={200} />,
+      ),
+      ex(
+        'Simple режим',
+        'Минималистичный режим без номеров страниц.',
+        `<Pagination variant="simple" current={3} total={120} pageSize={10} onChange={() => {}} />`,
+        <UI.Pagination current={3} onChange={noop} pageSize={10} total={120} variant="simple" />,
+      ),
+      ex(
+        'Size changer и showTotal',
+        'Выбор page size и отображение диапазона элементов.',
+        `<Pagination
+  current={3}
+  total={240}
+  pageSize={20}
+  showSizeChanger
+  pageSizeOptions={[10, 20, 50]}
+  showTotal={(total, [start, end]) => \`\${start}-\${end} из \${total}\`}
+  onChange={() => {}}
+/>`,
+        <UI.Pagination
+          current={3}
+          onChange={noop}
+          pageSize={20}
+          pageSizeOptions={[10, 20, 50]}
+          showSizeChanger
+          showTotal={(total, [start, end]) => `${start}-${end} из ${total}`}
+          total={240}
+        />,
+      ),
+      ex(
+        'Quick jumper',
+        'Переход к нужной странице по Enter.',
+        `<Pagination current={8} total={500} pageSize={10} showQuickJumper onChange={() => {}} />`,
+        <UI.Pagination
+          current={8}
+          onChange={noop}
+          pageSize={10}
+          showQuickJumper
+          total={500}
+          variant="advanced"
+        />,
+      ),
+      ex(
+        'Legacy API',
+        'Поддерживается старый формат: page/totalPages/onPageChange.',
         `<Pagination page={2} totalPages={10} onPageChange={() => {}} />`,
         <UI.Pagination onPageChange={noop} page={2} totalPages={10} />,
       ),
       ex(
-        'Расширенная пагинация',
-        'С номерами страниц, общим количеством и выбором количества элементов на страницу.',
-        `<Pagination
-  variant="advanced"
-  page={3}
-  totalPages={12}
-  totalItems={240}
-  pageSize={20}
-  pageSizeOptions={[10, 20, 50]}
-  showPageNumbers
-  onPageChange={() => {}}
-  onPageSizeChange={() => {}}
-/>`,
+        'Маленький размер',
+        'Компактный вариант для плотных интерфейсов.',
+        `<Pagination current={4} total={100} pageSize={10} size="small" onChange={() => {}} />`,
+        <UI.Pagination current={4} onChange={noop} pageSize={10} size="small" total={100} />,
+      ),
+      ex(
+        'Hide on single page',
+        'Скрывает компонент, когда всего одна страница.',
+        `<Pagination current={1} total={8} pageSize={10} hideOnSinglePage onChange={() => {}} />`,
         <UI.Pagination
-          onPageChange={noop}
-          onPageSizeChange={noop}
-          page={3}
-          pageSize={20}
-          pageSizeOptions={[10, 20, 50]}
-          showPageNumbers
-          totalItems={240}
-          totalPages={12}
-          variant="advanced"
+          current={1}
+          hideOnSinglePage
+          onChange={noop}
+          pageSize={10}
+          total={8}
         />,
       ),
+    ],
+    propDocs: [
+      pd('current', 'number', 'Текущая страница (controlled).', false),
+      pd('defaultCurrent', 'number', 'Начальная страница в uncontrolled режиме.', false, '1'),
+      pd('total', 'number', 'Общее количество элементов.', false),
+      pd('pageSize', 'number', 'Количество элементов на странице.', false, '10'),
+      pd('onChange', '(page: number, pageSize: number) => void', 'Событие изменения страницы/размера.', false),
+      pd('showSizeChanger', 'boolean', 'Показывает выбор размера страницы.', false, 'false'),
+      pd('showQuickJumper', 'boolean', 'Показывает поле быстрого перехода к странице.', false, 'false'),
+      pd('showTotal', '(total, [start, end]) => ReactNode', 'Кастомный рендер общего количества.', false),
+      pd('size', "'small' | 'middle'", 'Визуальный размер компонента.', false, "'middle'"),
+      pd('hideOnSinglePage', 'boolean', 'Скрывает пагинацию, если страница только одна.', false, 'false'),
+      pd('page', 'number', 'Legacy: текущая страница.', false),
+      pd('totalPages', 'number', 'Legacy: общее количество страниц.', false),
+      pd('onPageChange', '(page: number) => void', 'Legacy: изменение страницы.', false),
     ],
   },
   {
@@ -1637,56 +1692,171 @@ const docs: ComponentDoc[] = [
     slug: 'table',
     name: 'Table',
     group: 'special',
-    description: 'Таблица для структурированного отображения строк и колонок.',
+    description:
+      'Таблица с API в стиле Ant Design: columns/dataSource, кастомный render, loading, size, bordered и pagination.',
     examples: [
       ex(
-        'Таблица пользователей',
-        'Базовый табличный вывод данных.',
+        'Базовая таблица',
+        'Минимальная конфигурация с columns и dataSource.',
         `<Table
   columns={[
-    { key: "name", header: "Имя" },
-    { key: "role", header: "Роль" }
+    { title: "Имя", dataIndex: "name" },
+    { title: "Роль", dataIndex: "role" }
   ]}
-  rows={[
+  dataSource={[
     { name: "Анна", role: "Designer" },
     { name: "Илья", role: "Developer" }
   ]}
-  rowKey={(row) => row.name}
+  rowKey="name"
 />`,
         <UI.Table
           columns={[
-            { key: 'name', header: 'Имя' },
-            { key: 'role', header: 'Роль' },
+            { title: 'Имя', dataIndex: 'name' },
+            { title: 'Роль', dataIndex: 'role' },
           ]}
-          rowKey={(row) => row.name}
-          rows={[
+          dataSource={[
             { name: 'Анна', role: 'Designer' },
             { name: 'Илья', role: 'Developer' },
           ]}
+          rowKey="name"
         />,
       ),
       ex(
-        'Рендер ячейки',
-        'Кастомизация вывода значения в колонке.',
-        `<Table columns={[{ key: "status", header: "Статус", render: (row) => <Badge>{row.status}</Badge> }]} ... />`,
+        'Кастомный рендер и выравнивание',
+        'Кастомизация ячеек через render(value, row, index) и align.',
+        `<Table
+  columns={[
+    { title: "Имя", dataIndex: "name" },
+    {
+      title: "Статус",
+      dataIndex: "status",
+      align: "right",
+      render: (value) => <Badge variant="primary">{String(value)}</Badge>
+    }
+  ]}
+  dataSource={[
+    { id: "1", name: "Анна", status: "active" },
+    { id: "2", name: "Илья", status: "paused" }
+  ]}
+  rowKey="id"
+/>`,
         <UI.Table
           columns={[
-            { key: 'name', header: 'Имя' },
+            { title: 'Имя', dataIndex: 'name' },
             {
-              key: 'status',
-              header: 'Статус',
-              render: (row: { status: string }) => (
-                <UI.Badge variant="primary">{row.status}</UI.Badge>
+              title: 'Статус',
+              align: 'right',
+              dataIndex: 'status',
+              render: (value) => (
+                <UI.Badge variant="primary">{String(value)}</UI.Badge>
               ),
             },
           ]}
-          rowKey={(row) => row.name}
-          rows={[
-            { name: 'Анна', status: 'active' },
-            { name: 'Илья', status: 'paused' },
+          dataSource={[
+            { id: '1', name: 'Анна', status: 'active' },
+            { id: '2', name: 'Илья', status: 'paused' },
           ]}
+          rowKey="id"
         />,
       ),
+      ex(
+        'Pagination',
+        'Встроенная пагинация c page size selector.',
+        `<Table
+  columns={[
+    { title: "Имя", dataIndex: "name" },
+    { title: "Отдел", dataIndex: "department" }
+  ]}
+  dataSource={users}
+  rowKey="id"
+  pagination={{ pageSize: 5, showSizeChanger: true, pageSizeOptions: [5, 10, 20] }}
+/>`,
+        <UI.Table
+          columns={[
+            { title: 'Имя', dataIndex: 'name' },
+            { title: 'Отдел', dataIndex: 'department' },
+          ]}
+          dataSource={Array.from({ length: 14 }).map((_, index) => ({
+            id: `user-${index + 1}`,
+            name: `Пользователь ${index + 1}`,
+            department: index % 2 === 0 ? 'Design' : 'Development',
+          }))}
+          pagination={{ pageSize: 5, pageSizeOptions: [5, 10, 20], showSizeChanger: true }}
+          rowKey="id"
+        />,
+      ),
+      ex(
+        'Размеры и границы',
+        'Поддержка размеров строки и отключения border.',
+        `<Flex direction="column" gap={12}>
+  <Table size="small" columns={columns} dataSource={rows} />
+  <Table size="large" bordered={false} columns={columns} dataSource={rows} />
+</Flex>`,
+        <UI.Flex direction="column" gap={12}>
+          <UI.Table
+            columns={[
+              { title: 'Параметр', dataIndex: 'label' },
+              { title: 'Значение', dataIndex: 'value' },
+            ]}
+            dataSource={[
+              { id: '1', label: 'Размер', value: 'small' },
+              { id: '2', label: 'Граница', value: 'on' },
+            ]}
+            rowKey="id"
+            size="small"
+          />
+          <UI.Table
+            bordered={false}
+            columns={[
+              { title: 'Параметр', dataIndex: 'label' },
+              { title: 'Значение', dataIndex: 'value' },
+            ]}
+            dataSource={[
+              { id: '1', label: 'Размер', value: 'large' },
+              { id: '2', label: 'Граница', value: 'off' },
+            ]}
+            rowKey="id"
+            size="large"
+          />
+        </UI.Flex>,
+      ),
+      ex(
+        'Loading и Empty',
+        'Состояния загрузки и отсутствия данных.',
+        `<Flex direction="column" gap={12}>
+  <Table loading columns={columns} dataSource={[]} />
+  <Table columns={columns} dataSource={[]} emptyText="Ничего не найдено" />
+</Flex>`,
+        <UI.Flex direction="column" gap={12}>
+          <UI.Table
+            columns={[
+              { title: 'Имя', dataIndex: 'name' },
+              { title: 'Роль', dataIndex: 'role' },
+            ]}
+            dataSource={[]}
+            loading
+          />
+          <UI.Table
+            columns={[
+              { title: 'Имя', dataIndex: 'name' },
+              { title: 'Роль', dataIndex: 'role' },
+            ]}
+            dataSource={[]}
+            emptyText="Ничего не найдено"
+          />
+        </UI.Flex>,
+      ),
+    ],
+    propDocs: [
+      pd('columns', 'TableColumn<T>[]', 'Конфигурация колонок таблицы.', true),
+      pd('dataSource', 'T[]', 'Источник данных строк (новый API).', false, '[]'),
+      pd('rows', 'T[]', 'Legacy источник данных строк.', false, '[]'),
+      pd('rowKey', 'keyof T | (row: T, index: number) => string', 'Уникальный ключ строки.', false, "'index'"),
+      pd('loading', 'boolean', 'Состояние загрузки таблицы.', false, 'false'),
+      pd('bordered', 'boolean', 'Показывать внешнюю границу таблицы.', false, 'true'),
+      pd('size', "'small' | 'middle' | 'large'", 'Размер строк и отступов.', false, "'middle'"),
+      pd('pagination', 'boolean | TablePaginationConfig', 'Встроенная пагинация таблицы.', false, 'false'),
+      pd('emptyText', 'ReactNode', 'Текст/контент для пустого состояния.', false, "'Нет данных'"),
     ],
   },
   {
