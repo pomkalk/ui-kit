@@ -475,6 +475,79 @@ const docs: ComponentDoc[] = [
     ],
   },
   {
+    slug: 'autocomplete',
+    name: 'Autocomplete',
+    group: 'forms',
+    description:
+      'Поле ввода с выпадающим списком подсказок и фильтрацией значений по мере ввода.',
+    examples: [
+      ex(
+        'Базовый autocomplete',
+        'Список вариантов фильтруется по введенному тексту.',
+        `<Autocomplete
+  placeholder="Search user..."
+  options={[
+    { label: "Jack", value: "jack" },
+    { label: "Lucy", value: "lucy" },
+    { label: "Yiminghe", value: "yiminghe" }
+  ]}
+/>`,
+        <UI.Autocomplete
+          options={[
+            { label: 'Jack', value: 'jack' },
+            { label: 'Lucy', value: 'lucy' },
+            { label: 'Yiminghe', value: 'yiminghe' },
+          ]}
+          placeholder="Search user..."
+        />,
+      ),
+      ex(
+        'С невалидным состоянием',
+        'Подсветка поля при ошибке валидации сохраняется и в режиме autocomplete.',
+        `<Autocomplete
+  isInvalid
+  placeholder="Type city..."
+  options={[
+    { label: "London", value: "london" },
+    { label: "Leeds", value: "leeds" },
+    { label: "New York", value: "new-york" }
+  ]}
+/>`,
+        <UI.Autocomplete
+          isInvalid
+          options={[
+            { label: 'London', value: 'london' },
+            { label: 'Leeds', value: 'leeds' },
+            { label: 'New York', value: 'new-york' },
+          ]}
+          placeholder="Type city..."
+        />,
+      ),
+      ex(
+        'С очисткой значения',
+        'При allowClear показывает крестик для быстрого очищения поля.',
+        `<Autocomplete
+  allowClear
+  defaultValue="Lucy"
+  options={[
+    { label: "Jack", value: "jack" },
+    { label: "Lucy", value: "lucy" },
+    { label: "Yiminghe", value: "yiminghe" }
+  ]}
+/>`,
+        <UI.Autocomplete
+          allowClear
+          defaultValue="Lucy"
+          options={[
+            { label: 'Jack', value: 'jack' },
+            { label: 'Lucy', value: 'lucy' },
+            { label: 'Yiminghe', value: 'yiminghe' },
+          ]}
+        />,
+      ),
+    ],
+  },
+  {
     slug: 'checkbox',
     name: 'Checkbox',
     group: 'forms',
@@ -611,6 +684,27 @@ const docs: ComponentDoc[] = [
         'Ограничение по типам файлов.',
         `<FileInput accept="image/*" />`,
         <UI.FileInput accept="image/*" />,
+      ),
+    ],
+  },
+  {
+    slug: 'multiple-file-input',
+    name: 'MultipleFileInput',
+    group: 'forms',
+    description:
+      'Поле загрузки нескольких файлов с тем же визуальным стилем, что и FileInput.',
+    examples: [
+      ex(
+        'Загрузка нескольких файлов',
+        'Позволяет выбрать сразу несколько документов в одном поле.',
+        `<MultipleFileInput />`,
+        <UI.MultipleFileInput />,
+      ),
+      ex(
+        'С ограничением типов',
+        'Можно ограничить выбор, например только изображениями.',
+        `<MultipleFileInput accept="image/*" />`,
+        <UI.MultipleFileInput accept="image/*" />,
       ),
     ],
   },

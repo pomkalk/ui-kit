@@ -7,7 +7,7 @@ import {
   type OptionHTMLAttributes,
 } from 'react'
 import { FaChevronDown } from 'react-icons/fa6'
-import { cn } from '../utils'
+import { cn, getAnimationStyle, useAnimatedPresence } from '../utils'
 
 export interface SelectOption extends OptionHTMLAttributes<HTMLOptionElement> {
   label: string
@@ -50,6 +50,9 @@ export function Select({
   const [isOpen, setIsOpen] = useState(false)
   const [placement, setPlacement] = useState<'bottom' | 'top'>('bottom')
   const [internalValue, setInternalValue] = useState(String(defaultValue ?? ''))
+  const { isMounted: isPanelMounted, isVisible: isPanelVisible } =
+    useAnimatedPresence(isOpen)
+  const panelAnimationStyle = getAnimationStyle()
 
   const selectedValue = useMemo(
     () => (value !== undefined ? String(value) : internalValue),
@@ -64,12 +67,17 @@ export function Select({
   const updatePlacement = () => {
     const rect = rootRef.current?.getBoundingClientRect()
     if (!rect) return
-    const panelHeight = panelRef.current?.offsetHeight ?? 260
+    const panelHeight = panelRef.current?.offsetHeight
+    if (!panelHeight) {
+      setPlacement('bottom')
+      return
+    }
+    const screenGap = 8
     const spaceBelow = window.innerHeight - rect.bottom
     const spaceAbove = rect.top
-    setPlacement(
-      spaceBelow < panelHeight + 8 && spaceAbove > spaceBelow ? 'top' : 'bottom',
-    )
+    const shouldOpenTop =
+      spaceBelow < panelHeight + screenGap && spaceAbove >= panelHeight + screenGap
+    setPlacement(shouldOpenTop ? 'top' : 'bottom')
   }
 
   useEffect(() => {
@@ -90,7 +98,7 @@ export function Select({
     document.addEventListener('keydown', handleEscape)
     window.addEventListener('resize', handleViewportChange)
     window.addEventListener('scroll', handleViewportChange, true)
-    updatePlacement()
+    if (isPanelMounted) updatePlacement()
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
@@ -98,7 +106,13 @@ export function Select({
       window.removeEventListener('resize', handleViewportChange)
       window.removeEventListener('scroll', handleViewportChange, true)
     }
-  }, [isOpen])
+  }, [isOpen, isPanelMounted])
+
+  useEffect(() => {
+    if (!isOpen || !isPanelMounted) return
+    const rafId = requestAnimationFrame(() => updatePlacement())
+    return () => cancelAnimationFrame(rafId)
+  }, [isOpen, isPanelMounted])
 
   const handleSelect = (nextValue: string) => {
     if (value === undefined) setInternalValue(nextValue)
@@ -142,14 +156,18 @@ export function Select({
         </span>
       </button>
 
-      {isOpen ? (
+      {isPanelMounted ? (
         <ul
           className={cn(
-            'absolute z-20 max-h-60 w-full overflow-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg',
+            'absolute z-20 max-h-60 w-full overflow-auto rounded-xl border border-slate-200 bg-white p-1 shadow-lg transition-[opacity,transform] will-change-[opacity,transform]',
             placement === 'bottom' ? 'top-full mt-1' : 'bottom-full mb-1',
+            placement === 'bottom' ? 'origin-top' : 'origin-bottom',
+            isPanelVisible ? 'scale-100 opacity-100' : 'scale-[0.98] opacity-0',
+            !isPanelVisible && 'pointer-events-none',
           )}
           ref={panelRef}
           role="listbox"
+          style={panelAnimationStyle}
         >
           {options.map((option) => {
             const isSelected = option.value === selectedValue

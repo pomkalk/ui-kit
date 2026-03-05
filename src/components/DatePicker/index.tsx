@@ -6,7 +6,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from 'react-icons/fa6'
-import { cn } from '../utils'
+import { cn, getAnimationStyle, useAnimatedPresence } from '../utils'
 
 export interface DatePickerProps {
   value?: string
@@ -95,6 +95,9 @@ export function DatePicker({
   const [isOpen, setIsOpen] = useState(false)
   const [placement, setPlacement] = useState<'bottom' | 'top'>('bottom')
   const [internalValue, setInternalValue] = useState(defaultValue ?? '')
+  const { isMounted: isPanelMounted, isVisible: isPanelVisible } =
+    useAnimatedPresence(isOpen)
+  const panelAnimationStyle = getAnimationStyle()
   const selectedValue = value ?? internalValue
   const selectedDate = useMemo(() => parseDate(selectedValue), [selectedValue])
   const [viewDate, setViewDate] = useState(selectedDate ?? new Date())
@@ -114,12 +117,17 @@ export function DatePicker({
   const updatePlacement = () => {
     const rect = rootRef.current?.getBoundingClientRect()
     if (!rect) return
-    const panelHeight = panelRef.current?.offsetHeight ?? 340
+    const panelHeight = panelRef.current?.offsetHeight
+    if (!panelHeight) {
+      setPlacement('bottom')
+      return
+    }
+    const screenGap = 8
     const spaceBelow = window.innerHeight - rect.bottom
     const spaceAbove = rect.top
-    setPlacement(
-      spaceBelow < panelHeight + 8 && spaceAbove > spaceBelow ? 'top' : 'bottom',
-    )
+    const shouldOpenTop =
+      spaceBelow < panelHeight + screenGap && spaceAbove >= panelHeight + screenGap
+    setPlacement(shouldOpenTop ? 'top' : 'bottom')
   }
 
   useEffect(() => {
@@ -141,14 +149,20 @@ export function DatePicker({
     document.addEventListener('keydown', handleEscape)
     window.addEventListener('resize', handleViewportChange)
     window.addEventListener('scroll', handleViewportChange, true)
-    updatePlacement()
+    if (isPanelMounted) updatePlacement()
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
       document.removeEventListener('keydown', handleEscape)
       window.removeEventListener('resize', handleViewportChange)
       window.removeEventListener('scroll', handleViewportChange, true)
     }
-  }, [isOpen])
+  }, [isOpen, isPanelMounted])
+
+  useEffect(() => {
+    if (!isOpen || !isPanelMounted) return
+    const rafId = requestAnimationFrame(() => updatePlacement())
+    return () => cancelAnimationFrame(rafId)
+  }, [isOpen, isPanelMounted])
 
   const selectDate = (nextDate: Date) => {
     if (!inRange(nextDate, minDate, maxDate)) return
@@ -192,13 +206,17 @@ export function DatePicker({
         </span>
       </button>
 
-      {isOpen ? (
+      {isPanelMounted ? (
         <div
           className={cn(
-            'absolute z-30 w-[280px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg',
+            'absolute z-30 w-[280px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg transition-[opacity,transform] will-change-[opacity,transform]',
             placement === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2',
+            placement === 'bottom' ? 'origin-top' : 'origin-bottom',
+            isPanelVisible ? 'scale-100 opacity-100' : 'scale-[0.98] opacity-0',
+            !isPanelVisible && 'pointer-events-none',
           )}
           ref={panelRef}
+          style={panelAnimationStyle}
         >
           <div className="flex items-center justify-between border-b border-slate-200 px-3 py-2">
             <div className="inline-flex items-center gap-1">
