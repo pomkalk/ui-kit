@@ -3,9 +3,9 @@ import { componentGroups } from './componentDocs'
 
 export function DocsLayout() {
   return (
-    <div className="min-h-screen bg-[#eef1f8] p-6">
-      <div className="mx-auto flex max-w-[1440px] overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-        <aside className="h-[calc(100vh-3rem)] w-[320px] overflow-y-auto border-r border-slate-200 bg-white p-4">
+    <div className="min-h-screen bg-[#eef1f8]">
+      <div className="flex h-screen overflow-hidden bg-slate-50">
+        <aside className="h-full w-[320px] overflow-y-auto border-r border-slate-200 bg-white p-4">
           <div className="mb-5">
             <h2 className="text-lg font-semibold text-slate-900">UI Kit</h2>
             <p className="text-xs text-slate-500">Каталог компонентов</p>
@@ -68,7 +68,7 @@ export function DocsLayout() {
           </nav>
         </aside>
 
-        <main className="h-[calc(100vh-3rem)] flex-1 overflow-y-auto p-6">
+        <main className="h-full flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
       </div>

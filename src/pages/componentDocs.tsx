@@ -78,6 +78,37 @@ function DrawerDemo({
   )
 }
 
+function OverlayDemo() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative flex h-28 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-3">
+      <UI.Button size="sm" variant="secondary" onClick={() => setOpen(true)}>
+        Показать overlay
+      </UI.Button>
+      {open ? <UI.Overlay className="absolute inset-0" onClose={() => setOpen(false)} /> : null}
+    </div>
+  )
+}
+
+function OverlayDemoDark() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative flex h-28 items-center justify-center overflow-hidden rounded-xl border border-slate-200 bg-white p-3">
+      <UI.Button size="sm" variant="secondary" onClick={() => setOpen(true)}>
+        Показать темный overlay
+      </UI.Button>
+      {open ? (
+        <UI.Overlay
+          className="absolute inset-0 bg-slate-900/50"
+          onClose={() => setOpen(false)}
+        />
+      ) : null}
+    </div>
+  )
+}
+
 function code(lines: string): string {
   return lines.trim()
 }
@@ -1552,20 +1583,22 @@ const docs: ComponentDoc[] = [
     description: 'Полупрозрачный слой поверх интерфейса для модальных сценариев.',
     examples: [
       ex(
-        'Базовый overlay',
-        'Подложка для модалок и drawer.',
-        `<Overlay />`,
-        <div className="relative h-24 overflow-hidden rounded-xl border border-slate-200">
-          <UI.Overlay className="absolute inset-0" />
-        </div>,
+        'Интерактивный overlay',
+        'Нажмите на overlay, чтобы скрыть его.',
+        `<>
+  <Button size="sm" onClick={() => setOpen(true)}>Показать overlay</Button>
+  {open ? <Overlay onClose={() => setOpen(false)} /> : null}
+</>`,
+        <OverlayDemo />,
       ),
       ex(
         'Кастомная прозрачность',
-        'Контроль затемнения через className.',
-        `<Overlay className="absolute inset-0 bg-slate-900/50" />`,
-        <div className="relative h-24 overflow-hidden rounded-xl border border-slate-200">
-          <UI.Overlay className="absolute inset-0 bg-slate-900/50" />
-        </div>,
+        'Контроль затемнения через className и закрытие по клику.',
+        `<>
+  <Button size="sm" onClick={() => setOpen(true)}>Показать темный overlay</Button>
+  {open ? <Overlay className="absolute inset-0 bg-slate-900/50" onClose={() => setOpen(false)} /> : null}
+</>`,
+        <OverlayDemoDark />,
       ),
     ],
   },
