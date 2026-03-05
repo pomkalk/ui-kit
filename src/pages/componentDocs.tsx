@@ -164,6 +164,78 @@ function DropdownTriggerDemo() {
   )
 }
 
+function TableHeaderFooterDemo() {
+  const [query, setQuery] = useState('')
+  const [department, setDepartment] = useState('all')
+
+  const users = [
+    { id: '1', name: 'Анна', department: 'Design', status: 'active' },
+    { id: '2', name: 'Илья', department: 'Development', status: 'active' },
+    { id: '3', name: 'Мария', department: 'Design', status: 'paused' },
+    { id: '4', name: 'Олег', department: 'Development', status: 'active' },
+    { id: '5', name: 'Елена', department: 'QA', status: 'paused' },
+    { id: '6', name: 'Никита', department: 'QA', status: 'active' },
+  ]
+
+  const filtered = users.filter((user) => {
+    const matchesQuery = user.name.toLowerCase().includes(query.trim().toLowerCase())
+    const matchesDepartment =
+      department === 'all' ? true : user.department.toLowerCase() === department
+    return matchesQuery && matchesDepartment
+  })
+
+  return (
+    <UI.Table
+      columns={[
+        { title: 'Имя', dataIndex: 'name' },
+        { title: 'Отдел', dataIndex: 'department' },
+        {
+          title: 'Статус',
+          dataIndex: 'status',
+          align: 'right',
+          render: (value) => (
+            <UI.Badge variant={value === 'active' ? 'success' : 'warning'}>
+              {String(value)}
+            </UI.Badge>
+          ),
+        },
+      ]}
+      dataSource={filtered}
+      footer={
+        <UI.Flex align="center" justify="space-between" wrap="wrap" gap={8}>
+          <UI.Text tone="muted">Показано: {filtered.length}</UI.Text>
+          <UI.Button size="small" type="default">
+            Экспорт
+          </UI.Button>
+        </UI.Flex>
+      }
+      header={
+        <UI.Flex align="center" gap={8} wrap="wrap">
+          <UI.Input
+            className="w-56"
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Поиск по имени"
+            value={query}
+          />
+          <UI.Select
+            className="w-44"
+            onValueChange={(value) => setDepartment(value)}
+            options={[
+              { label: 'Все отделы', value: 'all' },
+              { label: 'Design', value: 'design' },
+              { label: 'Development', value: 'development' },
+              { label: 'QA', value: 'qa' },
+            ]}
+            value={department}
+          />
+        </UI.Flex>
+      }
+      pagination={{ pageSize: 4, showSizeChanger: true, pageSizeOptions: [4, 6, 10] }}
+      rowKey="id"
+    />
+  )
+}
+
 function code(lines: string): string {
   return lines.trim()
 }
@@ -1846,12 +1918,30 @@ const docs: ComponentDoc[] = [
           />
         </UI.Flex>,
       ),
+      ex(
+        'Header + Footer',
+        'В header можно разместить фильтры, а в footer — дополнительную информацию и действия.',
+        `<Table
+  columns={[...]}
+  dataSource={filteredRows}
+  header={
+    <Flex gap={8}>
+      <Input placeholder="Поиск по имени" />
+      <Select options={[...]} />
+    </Flex>
+  }
+  footer={<Text>Показано: N</Text>}
+/>`,
+        <TableHeaderFooterDemo />,
+      ),
     ],
     propDocs: [
       pd('columns', 'TableColumn<T>[]', 'Конфигурация колонок таблицы.', true),
       pd('dataSource', 'T[]', 'Источник данных строк (новый API).', false, '[]'),
       pd('rows', 'T[]', 'Legacy источник данных строк.', false, '[]'),
       pd('rowKey', 'keyof T | (row: T, index: number) => string', 'Уникальный ключ строки.', false, "'index'"),
+      pd('header', 'ReactNode', 'Контент над таблицей (например фильтры и actions).', false),
+      pd('footer', 'ReactNode', 'Контент под таблицей (например summary и действия).', false),
       pd('loading', 'boolean', 'Состояние загрузки таблицы.', false, 'false'),
       pd('bordered', 'boolean', 'Показывать внешнюю границу таблицы.', false, 'true'),
       pd('size', "'small' | 'middle' | 'large'", 'Размер строк и отступов.', false, "'middle'"),

@@ -31,6 +31,8 @@ export interface TableProps<T> extends HTMLAttributes<HTMLDivElement> {
   dataSource?: T[]
   rows?: T[]
   rowKey?: keyof T & string | ((row: T, index: number) => string)
+  header?: ReactNode
+  footer?: ReactNode
   loading?: boolean
   bordered?: boolean
   size?: TableSize
@@ -43,6 +45,8 @@ export function Table<T>({
   dataSource,
   rows,
   rowKey,
+  header,
+  footer,
   loading = false,
   bordered = true,
   size = 'middle',
@@ -146,6 +150,8 @@ export function Table<T>({
       )}
       {...props}
     >
+      {header ? <div className="border-b border-slate-200 p-3">{header}</div> : null}
+
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left text-sm">
           <thead className="bg-slate-50 text-slate-600">
@@ -200,6 +206,8 @@ export function Table<T>({
           </tbody>
         </table>
       </div>
+
+      {footer ? <div className="border-t border-slate-200 p-3">{footer}</div> : null}
 
       {paginationEnabled ? (
         <div className="border-t border-slate-200 p-2">
