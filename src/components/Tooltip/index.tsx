@@ -1,4 +1,4 @@
-import type { HTMLAttributes, ReactNode } from 'react'
+import { useState, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '../utils'
 
 export interface TooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'content'> {
@@ -8,16 +8,26 @@ export interface TooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'cont
 
 export function Tooltip({
   content,
-  open = false,
+  open,
   className,
   children,
   ...props
 }: TooltipProps) {
+  const [isHovered, setIsHovered] = useState(false)
+  const isOpen = open ?? isHovered
+
   return (
-    <div className={cn('relative inline-flex', className)} {...props}>
+    <div
+      className={cn('relative inline-flex', className)}
+      onBlur={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      {...props}
+    >
       {children}
-      {open ? (
-        <div className="absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md bg-slate-900 px-2 py-1 text-xs text-white">
+      {isOpen ? (
+        <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md bg-slate-900 px-2 py-1 text-xs text-white">
           {content}
         </div>
       ) : null}

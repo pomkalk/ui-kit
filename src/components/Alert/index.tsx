@@ -6,11 +6,13 @@ type AlertStatus = 'info' | 'success' | 'warning' | 'danger'
 export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   status?: AlertStatus
   title?: ReactNode
+  icon?: ReactNode
 }
 
 export function Alert({
   status = 'info',
   title,
+  icon,
   className,
   children,
   ...props
@@ -24,8 +26,13 @@ export function Alert({
 
   return (
     <div className={cn('rounded-lg border p-3 text-sm', tone, className)} role="alert" {...props}>
-      {title ? <div className="mb-1 font-semibold">{title}</div> : null}
-      {children}
+      <div className="flex items-start gap-2">
+        {icon ? <span className="mt-0.5 inline-flex shrink-0">{icon}</span> : null}
+        <div className="min-w-0">
+          {title ? <div className="mb-1 font-semibold">{title}</div> : null}
+          {children}
+        </div>
+      </div>
     </div>
   )
 }

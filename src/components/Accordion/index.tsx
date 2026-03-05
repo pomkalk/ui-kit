@@ -1,5 +1,5 @@
 import { useState, type HTMLAttributes, type ReactNode } from 'react'
-import { cn } from '../utils'
+import { cn, getAnimationStyle } from '../utils'
 
 export interface AccordionItem {
   key: string
@@ -19,6 +19,7 @@ export function Accordion({
   ...props
 }: AccordionProps) {
   const [openKey, setOpenKey] = useState(defaultOpenKey ?? items[0]?.key)
+  const animationStyle = getAnimationStyle()
 
   return (
     <div className={cn('rounded-xl border border-slate-200 bg-white', className)} {...props}>
@@ -29,12 +30,30 @@ export function Accordion({
             <button
               className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-800"
               onClick={() => setOpenKey(open ? '' : item.key)}
+              aria-expanded={open}
               type="button"
             >
               {item.title}
-              <span>{open ? '-' : '+'}</span>
+              <span
+                className={cn('transition-transform', open ? 'rotate-180' : 'rotate-0')}
+                style={animationStyle}
+              >
+                {open ? '-' : '+'}
+              </span>
             </button>
-            {open ? <div className="px-4 pb-4 text-sm text-slate-600">{item.content}</div> : null}
+            <div
+              aria-hidden={!open}
+              className="grid transition-[grid-template-rows,opacity]"
+              style={{
+                ...animationStyle,
+                gridTemplateRows: open ? '1fr' : '0fr',
+                opacity: open ? 1 : 0,
+              }}
+            >
+              <div className="overflow-hidden">
+                <div className="px-4 pb-4 text-sm text-slate-600">{item.content}</div>
+              </div>
+            </div>
           </div>
         )
       })}
