@@ -1,34 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Link, Route, Routes } from 'react-router-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen p-6">
+      <div className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h1 className="mb-4 text-2xl font-semibold text-slate-900">
+          UI Kit Starter
+        </h1>
+        <nav className="mb-6 flex gap-3">
+          <Link
+            to="/"
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-50"
+          >
+            Home
+          </Link>
+          <Link
+            to="/settings"
+            className="rounded-lg border border-slate-200 px-4 py-2 text-sm text-slate-700 transition hover:bg-slate-50"
+          >
+            Settings
+          </Link>
+        </nav>
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <p className="text-sm text-slate-600">
+                React Router подключен. Tailwind настроен и готов к использованию.
+              </p>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <p className="text-sm text-slate-600">
+                Страница настроек. Здесь можно собирать экран по `guideline.md`.
+              </p>
+            }
+          />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
