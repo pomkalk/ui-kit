@@ -117,6 +117,18 @@ const dropdownItems: UI.DropdownItem[] = [
   { key: '4', label: 'a danger item', danger: true },
 ]
 
+function InputAllowClearDemo() {
+  const [q, setQ] = useState('')
+  return (
+    <UI.Input
+      allowClear
+      placeholder="Поиск..."
+      value={q}
+      onChange={(e) => setQ(e.target.value)}
+    />
+  )
+}
+
 function DropdownPlacementDemo() {
   const placements: Array<UI.DropdownPlacement> = [
     'bottomLeft',
@@ -210,25 +222,30 @@ function TableHeaderFooterDemo() {
         </UI.Flex>
       }
       header={
-        <UI.Flex align="center" gap={8} wrap="wrap">
-          <UI.Input
-            className="w-56"
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Поиск по имени"
-            value={query}
-          />
-          <UI.Select
-            className="w-44"
-            onValueChange={(value) => setDepartment(value)}
-            options={[
-              { label: 'Все отделы', value: 'all' },
-              { label: 'Design', value: 'design' },
-              { label: 'Development', value: 'development' },
-              { label: 'QA', value: 'qa' },
-            ]}
-            value={department}
-          />
-        </UI.Flex>
+        <div className="flex flex-nowrap items-center gap-3">
+          <div className="w-56 min-w-0 shrink-0">
+            <UI.Input
+              allowClear
+              className="w-full"
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Поиск по имени"
+              value={query}
+            />
+          </div>
+          <div className="w-44 shrink-0">
+            <UI.Select
+              className="w-full"
+              onValueChange={(value) => setDepartment(value)}
+              options={[
+                { label: 'Все отделы', value: 'all' },
+                { label: 'Design', value: 'design' },
+                { label: 'Development', value: 'development' },
+                { label: 'QA', value: 'qa' },
+              ]}
+              value={department}
+            />
+          </div>
+        </div>
       }
       pagination={{ pageSize: 4, showSizeChanger: true, pageSizeOptions: [4, 6, 10] }}
       rowKey="id"
@@ -731,7 +748,7 @@ const docs: ComponentDoc[] = [
     slug: 'input',
     name: 'Input',
     group: 'forms',
-    description: 'Однострочное поле ввода текста с поддержкой валидационных состояний.',
+    description: 'Однострочное поле ввода текста с поддержкой валидационных состояний и очистки.',
     examples: [
       ex(
         'Базовый input',
@@ -740,11 +757,22 @@ const docs: ComponentDoc[] = [
         <UI.Input placeholder="Введите имя" />,
       ),
       ex(
+        'С очисткой',
+        'Кнопка очистки появляется при непустом значении.',
+        `<Input allowClear placeholder="Поиск..." value={query} onChange={(e) => setQuery(e.target.value)} />`,
+        <InputAllowClearDemo />,
+      ),
+      ex(
         'Ошибочное состояние',
         'Визуально выделяет проблемное поле.',
         `<Input isInvalid placeholder="Некорректный email" />`,
         <UI.Input isInvalid placeholder="Некорректный email" />,
       ),
+    ],
+    propDocs: [
+      pd('allowClear', 'boolean', 'Показывать кнопку очистки при непустом значении.', false, 'false'),
+      pd('onValueChange', '(value: string) => void', 'Коллбек при изменении значения.', false),
+      pd('isInvalid', 'boolean', 'Визуальное состояние ошибки.', false, 'false'),
     ],
   },
   {
