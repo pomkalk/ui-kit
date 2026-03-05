@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
+import { FaXmark } from 'react-icons/fa6'
 import { Overlay } from '../Overlay'
 import { Portal } from '../Portal'
 import { cn, getAnimationStyle, useAnimatedPresence } from '../utils'
@@ -48,8 +49,13 @@ export function Modal({
         >
           <div className="mb-4 flex items-center justify-between">
             <div className="text-lg font-semibold text-slate-900">{title}</div>
-            <button className="text-slate-500 hover:text-slate-700" onClick={onClose} type="button">
-              x
+            <button
+              aria-label="Закрыть модальное окно"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+              onClick={onClose}
+              type="button"
+            >
+              <FaXmark />
             </button>
           </div>
           {children}

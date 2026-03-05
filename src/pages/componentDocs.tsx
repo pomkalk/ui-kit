@@ -558,7 +558,7 @@ const docs: ComponentDoc[] = [
     slug: 'date-picker',
     name: 'DatePicker',
     group: 'forms',
-    description: 'Выбор даты на основе нативного календаря браузера.',
+    description: 'Кастомный выбор даты с календарем в стиле дизайн-системы.',
     examples: [
       ex(
         'Дата события',

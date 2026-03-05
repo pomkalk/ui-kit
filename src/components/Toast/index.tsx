@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
+import { FaXmark } from 'react-icons/fa6'
 import { cn } from '../utils'
 
 export interface ToastProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -25,8 +26,13 @@ export function Toast({
           {description ? <div className="mt-1 text-sm text-slate-600">{description}</div> : null}
         </div>
         {onClose ? (
-          <button className="text-slate-500 hover:text-slate-700" onClick={onClose} type="button">
-            x
+          <button
+            aria-label="Закрыть уведомление"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+            onClick={onClose}
+            type="button"
+          >
+            <FaXmark />
           </button>
         ) : null}
       </div>

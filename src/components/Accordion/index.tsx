@@ -1,4 +1,5 @@
 import { useState, type HTMLAttributes, type ReactNode } from 'react'
+import { FaChevronDown } from 'react-icons/fa6'
 import { cn, getAnimationStyle } from '../utils'
 
 export interface AccordionItem {
@@ -35,10 +36,13 @@ export function Accordion({
             >
               {item.title}
               <span
-                className={cn('transition-transform', open ? 'rotate-180' : 'rotate-0')}
+                className={cn(
+                  'inline-flex text-xs text-slate-500 transition-transform',
+                  open ? 'rotate-180' : 'rotate-0',
+                )}
                 style={animationStyle}
               >
-                {open ? '-' : '+'}
+                <FaChevronDown />
               </span>
             </button>
             <div
