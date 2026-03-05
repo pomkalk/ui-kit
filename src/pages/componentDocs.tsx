@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { FaChevronDown, FaFaceSmile } from 'react-icons/fa6'
 import * as UI from '../components'
 import type {
   ComponentDoc,
@@ -106,6 +107,60 @@ function OverlayDemoDark() {
         />
       ) : null}
     </div>
+  )
+}
+
+const dropdownItems: UI.DropdownItem[] = [
+  { key: '1', label: '1st menu item' },
+  { key: '2', label: '2nd menu item', icon: <FaFaceSmile />, disabled: true },
+  { key: '3', label: '3rd menu item', disabled: true },
+  { key: '4', label: 'a danger item', danger: true },
+]
+
+function DropdownPlacementDemo() {
+  const placements: Array<UI.DropdownPlacement> = [
+    'bottomLeft',
+    'bottom',
+    'bottomRight',
+    'topLeft',
+    'top',
+    'topRight',
+  ]
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-2">
+        {placements.map((placement) => (
+          <UI.Dropdown
+            key={placement}
+            items={dropdownItems}
+            placement={placement}
+            trigger="click"
+          >
+            <UI.Button variant="secondary">{placement}</UI.Button>
+          </UI.Dropdown>
+        ))}
+      </div>
+      <UI.Text tone="muted">Support 6 placements.</UI.Text>
+    </div>
+  )
+}
+
+function DropdownTriggerDemo() {
+  return (
+    <UI.Flex align="center" gap={20} wrap="wrap">
+      <UI.Dropdown items={dropdownItems} trigger="hover">
+        <button className="inline-flex items-center gap-2 text-3xl text-blue-600">
+          Hover me <FaChevronDown className="text-lg" />
+        </button>
+      </UI.Dropdown>
+
+      <UI.Dropdown items={dropdownItems} trigger="click">
+        <UI.Button variant="secondary">
+          Click me <FaChevronDown className="text-xs" />
+        </UI.Button>
+      </UI.Dropdown>
+    </UI.Flex>
   )
 }
 
@@ -873,6 +928,45 @@ const docs: ComponentDoc[] = [
           Настройки
         </UI.MenuItem>,
       ),
+    ],
+  },
+  {
+    slug: 'dropdown',
+    name: 'Dropdown',
+    group: 'navigation',
+    description:
+      'Выпадающее меню действий с поддержкой 6 позиций, триггеров click/hover и плавной анимацией.',
+    examples: [
+      ex(
+        'Размещение (placement)',
+        'Поддерживает 6 позиций: bottomLeft, bottom, bottomRight, topLeft, top, topRight.',
+        `<Dropdown items={items} placement="bottomLeft" trigger="click">
+  <Button>bottomLeft</Button>
+</Dropdown>`,
+        <DropdownPlacementDemo />,
+      ),
+      ex(
+        'Триггер открытия',
+        'Можно открывать меню по наведению или по клику.',
+        `<Dropdown items={items} trigger="hover">...</Dropdown>
+<Dropdown items={items} trigger="click">...</Dropdown>`,
+        <DropdownTriggerDemo />,
+      ),
+    ],
+    propDocs: [
+      pd('items', 'DropdownItem[]', 'Элементы выпадающего меню.', true),
+      pd(
+        'placement',
+        "'bottomLeft' | 'bottom' | 'bottomRight' | 'topLeft' | 'top' | 'topRight'",
+        'Позиция меню относительно триггера.',
+        false,
+        "'bottomLeft'",
+      ),
+      pd('trigger', "'click' | 'hover'", 'Событие, по которому открывается меню.', false, "'hover'"),
+      pd('open', 'boolean', 'Контролируемое состояние открытия.', false),
+      pd('defaultOpen', 'boolean', 'Начальное состояние для неконтролируемого режима.', false, 'false'),
+      pd('onOpenChange', '(open: boolean) => void', 'Коллбек изменения состояния открытия.', false),
+      pd('onSelect', '(item: DropdownItem) => void', 'Коллбек выбора пункта меню.', false),
     ],
   },
   {
