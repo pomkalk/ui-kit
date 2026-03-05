@@ -1,14 +1,34 @@
 import { NavLink, Outlet } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import * as UI from '../components'
 import { componentGroups } from './componentDocs'
 
+const languageOptions = [
+  { label: 'Русский', value: 'ru' },
+  { label: 'English', value: 'en' },
+]
+
 export function DocsLayout() {
+  const { t, i18n } = useTranslation()
+
   return (
     <div className="min-h-screen bg-[#eef1f8]">
       <div className="flex h-screen overflow-hidden bg-slate-50">
         <aside className="h-full w-[320px] overflow-y-auto border-r border-slate-200 bg-white p-4">
           <div className="mb-5">
-            <h2 className="text-lg font-semibold text-slate-900">UI Kit</h2>
-            <p className="text-xs text-slate-500">Каталог компонентов</p>
+            <h2 className="text-lg font-semibold text-slate-900">{t('layout_appName')}</h2>
+            <p className="text-xs text-slate-500">{t('layout_catalog')}</p>
+          </div>
+
+          <div className="mb-4">
+            <label className="mb-1.5 block text-xs font-medium text-slate-500">
+              {t('layout_language')}
+            </label>
+            <UI.Select
+              options={languageOptions}
+              value={i18n.language}
+              onValueChange={(value) => i18n.changeLanguage(value)}
+            />
           </div>
 
           <nav className="space-y-3">
@@ -24,7 +44,7 @@ export function DocsLayout() {
                 end
                 to="/"
               >
-                Приветствие
+                {t('layout_welcome')}
               </NavLink>
 
               <NavLink
@@ -37,7 +57,7 @@ export function DocsLayout() {
                 }
                 to="/demo"
               >
-                Demo
+                {t('layout_demo')}
               </NavLink>
             </div>
 

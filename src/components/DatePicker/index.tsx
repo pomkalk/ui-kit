@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FocusEventHandler } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   FaAnglesLeft,
   FaAnglesRight,
@@ -81,7 +82,7 @@ export function DatePicker({
   max,
   disabled = false,
   isInvalid = false,
-  placeholder = 'Select date',
+  placeholder,
   name,
   id,
   className,
@@ -90,6 +91,8 @@ export function DatePicker({
   onValueChange,
   onChange,
 }: DatePickerProps) {
+  const { t } = useTranslation()
+  const resolvedPlaceholder = placeholder ?? t('datePicker_placeholder')
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -199,7 +202,7 @@ export function DatePicker({
                 month: 'short',
                 year: 'numeric',
               }).format(selectedDate)
-            : placeholder}
+            : resolvedPlaceholder}
         </span>
         <span className="ml-2 inline-flex text-slate-400">
           <FaCalendar />

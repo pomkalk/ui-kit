@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type HTMLAttributes, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../Button'
 import { Select } from '../Select'
 import { cn } from '../utils'
@@ -99,6 +100,7 @@ export function Pagination({
   className,
   ...props
 }: PaginationProps) {
+  const { t } = useTranslation()
   const legacyTotalPages = totalPages ?? 1
   const initialPageSize = pageSize ?? defaultPageSize
   const resolvedTotalItems = total ?? totalItems ?? legacyTotalPages * initialPageSize
@@ -124,12 +126,12 @@ export function Pagination({
     setInternalPage((prev) => clampPage(prev, computedTotalPages))
   }, [isControlledPage, computedTotalPages])
 
-  const prevLabel = labels?.prev ?? 'Prev'
-  const nextLabel = labels?.next ?? 'Next'
-  const pageLabel = labels?.page ?? 'Page'
-  const ofLabel = labels?.of ?? 'of'
-  const itemsPerPageLabel = labels?.itemsPerPage ?? 'Items per page'
-  const totalItemsLabel = labels?.totalItems ?? 'Total'
+  const prevLabel = labels?.prev ?? t('pagination_prev')
+  const nextLabel = labels?.next ?? t('pagination_next')
+  const pageLabel = labels?.page ?? t('pagination_page')
+  const ofLabel = labels?.of ?? t('pagination_of')
+  const itemsPerPageLabel = labels?.itemsPerPage ?? t('pagination_itemsPerPage')
+  const totalItemsLabel = labels?.totalItems ?? t('pagination_total')
   const pageTokens = useMemo(
     () => buildPageTokens(safePage, computedTotalPages, maxVisiblePages),
     [safePage, computedTotalPages, maxVisiblePages],
@@ -239,7 +241,7 @@ export function Pagination({
 
           {showQuickJumper ? (
             <label className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap">
-              <span>Go to</span>
+              <span>{t('pagination_goTo')}</span>
               <input
                 className="h-8 w-16 rounded-lg border border-slate-200 px-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
                 min={1}

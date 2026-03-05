@@ -6,6 +6,7 @@ import {
   type FocusEventHandler,
   type OptionHTMLAttributes,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FaChevronDown } from 'react-icons/fa6'
 import { cn, getAnimationStyle, useAnimatedPresence } from '../utils'
 
@@ -33,7 +34,7 @@ export interface SelectProps {
 export function Select({
   options,
   isInvalid = false,
-  placeholder = 'Select option',
+  placeholder,
   value,
   defaultValue,
   disabled,
@@ -45,6 +46,8 @@ export function Select({
   onChange,
   className,
 }: SelectProps) {
+  const { t } = useTranslation()
+  const resolvedPlaceholder = placeholder ?? t('select_placeholder')
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLUListElement>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -144,7 +147,7 @@ export function Select({
             selectedOption ? 'text-slate-800' : 'text-slate-400',
           )}
         >
-          {selectedOption?.label ?? placeholder}
+          {selectedOption?.label ?? resolvedPlaceholder}
         </span>
         <span
           className={cn(

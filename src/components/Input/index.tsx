@@ -1,4 +1,5 @@
 import { useState, type InputHTMLAttributes } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FaXmark } from 'react-icons/fa6'
 import { cn } from '../utils'
 
@@ -19,6 +20,7 @@ export function Input({
   className,
   ...props
 }: InputProps) {
+  const { t } = useTranslation()
   const [internalValue, setInternalValue] = useState(defaultValue ?? '')
   const isControlled = value !== undefined
   const displayedValue = isControlled ? value : internalValue
@@ -72,7 +74,7 @@ export function Input({
       {allowClear && hasValue && !disabled ? (
         <button
           type="button"
-          aria-label="Очистить"
+          aria-label={t('input_clearAria')}
           className="absolute right-1 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
           onClick={handleClear}
         >

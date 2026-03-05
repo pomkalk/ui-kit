@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FaXmark } from 'react-icons/fa6'
 import { Overlay } from '../Overlay'
 import { Portal } from '../Portal'
@@ -22,6 +23,7 @@ export function Drawer({
   children,
   ...props
 }: DrawerProps) {
+  const { t } = useTranslation()
   const { isMounted, isVisible } = useAnimatedPresence(open)
   const animationStyle = getAnimationStyle()
 
@@ -90,7 +92,7 @@ export function Drawer({
           <div className="mb-4 flex items-center justify-between">
             <div className="text-lg font-semibold text-slate-900">{title}</div>
             <button
-              aria-label="Закрыть drawer"
+              aria-label={t('drawer_closeAria')}
               className="inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700"
               onClick={onClose}
               type="button"

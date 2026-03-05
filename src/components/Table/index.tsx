@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type HTMLAttributes, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Pagination } from '../Pagination'
 import { cn } from '../utils'
 
@@ -51,10 +52,12 @@ export function Table<T>({
   bordered = true,
   size = 'middle',
   pagination = false,
-  emptyText = 'Нет данных',
+  emptyText,
   className,
   ...props
 }: TableProps<T>) {
+  const { t } = useTranslation()
+  const resolvedEmptyText = emptyText ?? t('table_emptyText')
   const resolvedRows = dataSource ?? rows ?? []
   const paginationConfig = pagination && typeof pagination === 'object' ? pagination : undefined
   const paginationEnabled = Boolean(pagination)
@@ -176,13 +179,13 @@ export function Table<T>({
             {loading ? (
               <tr className="border-t border-slate-200">
                 <td className={cn(cellSizeClass, 'text-slate-500')} colSpan={Math.max(1, columns.length)}>
-                  Загрузка...
+                  {t('table_loading')}
                 </td>
               </tr>
             ) : pagedRows.length === 0 ? (
               <tr className="border-t border-slate-200">
                 <td className={cn(cellSizeClass, 'text-slate-500')} colSpan={Math.max(1, columns.length)}>
-                  {emptyText}
+                  {resolvedEmptyText}
                 </td>
               </tr>
             ) : (

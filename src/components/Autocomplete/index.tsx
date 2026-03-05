@@ -6,6 +6,7 @@ import {
   type FocusEventHandler,
   type InputHTMLAttributes,
 } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FaChevronDown, FaXmark } from 'react-icons/fa6'
 import { cn, getAnimationStyle, useAnimatedPresence } from '../utils'
 
@@ -39,13 +40,13 @@ export function Autocomplete({
   options,
   value,
   defaultValue,
-  placeholder = 'Search...',
+  placeholder,
   disabled = false,
   isInvalid = false,
   id,
   name,
   className,
-  noOptionsText = 'No options',
+  noOptionsText,
   allowClear = false,
   onBlur,
   onFocus,
@@ -53,6 +54,9 @@ export function Autocomplete({
   onChange,
   onSelect,
 }: AutocompleteProps) {
+  const { t } = useTranslation()
+  const resolvedPlaceholder = placeholder ?? t('autocomplete_placeholder')
+  const resolvedNoOptionsText = noOptionsText ?? t('autocomplete_noOptions')
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLUListElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -222,12 +226,12 @@ export function Autocomplete({
             onFocus?.(event)
             setIsOpen(true)
           }}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           value={inputValue}
         />
         {allowClear && hasValue && !disabled ? (
           <button
-            aria-label="Очистить значение"
+            aria-label={t('autocomplete_clearAria')}
             className="absolute right-8 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-xs text-slate-400 hover:bg-slate-100 hover:text-slate-600"
             onClick={clearValue}
             type="button"
@@ -236,7 +240,7 @@ export function Autocomplete({
           </button>
         ) : null}
         <button
-          aria-label="Toggle autocomplete options"
+          aria-label={t('autocomplete_toggleAria')}
           className="absolute right-1 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-xs text-slate-400 hover:bg-slate-100 disabled:cursor-not-allowed"
           disabled={disabled}
           onClick={() => setIsOpen((prev) => !prev)}
@@ -262,7 +266,7 @@ export function Autocomplete({
           style={panelAnimationStyle}
         >
           {filteredOptions.length === 0 ? (
-            <li className="px-3 py-2 text-sm text-slate-400">{noOptionsText}</li>
+            <li className="px-3 py-2 text-sm text-slate-400">{resolvedNoOptionsText}</li>
           ) : (
             filteredOptions.map((option) => (
               <li key={`${option.value}-${option.label}`}>

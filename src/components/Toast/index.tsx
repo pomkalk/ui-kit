@@ -1,4 +1,5 @@
 import type { HTMLAttributes, ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FaXmark } from 'react-icons/fa6'
 import { cn } from '../utils'
 
@@ -15,6 +16,7 @@ export function Toast({
   className,
   ...props
 }: ToastProps) {
+  const { t } = useTranslation()
   return (
     <div
       className={cn('w-full max-w-sm rounded-xl border border-slate-200 bg-white p-4 shadow-sm', className)}
@@ -27,7 +29,7 @@ export function Toast({
         </div>
         {onClose ? (
           <button
-            aria-label="Закрыть уведомление"
+            aria-label={t('toast_closeAria')}
             className="inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-700"
             onClick={onClose}
             type="button"

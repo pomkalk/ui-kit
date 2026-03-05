@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '../utils'
 
 export interface SpinnerProps extends HTMLAttributes<HTMLDivElement> {
@@ -6,6 +7,7 @@ export interface SpinnerProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export function Spinner({ size = 'md', className, ...props }: SpinnerProps) {
+  const { t } = useTranslation()
   const sizeClass = {
     sm: 'h-4 w-4 border-2',
     md: 'h-6 w-6 border-2',
@@ -14,7 +16,7 @@ export function Spinner({ size = 'md', className, ...props }: SpinnerProps) {
 
   return (
     <div
-      aria-label="Loading"
+      aria-label={t('spinner_loadingAria')}
       className={cn('animate-spin rounded-full border-slate-200 border-t-blue-500', sizeClass, className)}
       role="status"
       {...props}
