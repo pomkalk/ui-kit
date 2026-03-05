@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   FaBell,
   FaChartLine,
@@ -15,37 +16,38 @@ import * as UI from '../components'
 type DemoView = 'settings' | 'activity'
 
 function DemoSidebar({ view, onChange }: { view: DemoView; onChange: (next: DemoView) => void }) {
+  const { t } = useTranslation()
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 px-2">
         <div className="h-7 w-7 rounded-md bg-blue-500/10" />
-        <span className="text-lg font-semibold text-slate-900">AlphaWave</span>
+        <span className="text-lg font-semibold text-slate-900">{t('demo_appName')}</span>
       </div>
 
       <UI.SidebarSection
-        title="Main menu"
+        title={t('demo_sidebarMainMenu')}
         items={[
-          { key: 'dashboard', label: 'Dashboard', icon: <FaHouse /> },
-          { key: 'employees', label: 'Employees', icon: <FaUsers /> },
+          { key: 'dashboard', label: t('demo_sidebarDashboard'), icon: <FaHouse /> },
+          { key: 'employees', label: t('demo_sidebarEmployees'), icon: <FaUsers /> },
           {
             key: 'activity',
-            label: 'Activity Feed',
+            label: t('demo_sidebarActivityFeed'),
             icon: <FaChartLine />,
             active: view === 'activity',
             onClick: () => onChange('activity'),
           },
-          { key: 'messages', label: 'Messages', icon: <FaCommentDots /> },
-          { key: 'reports', label: 'Reports', icon: <FaFileLines /> },
+          { key: 'messages', label: t('demo_sidebarMessages'), icon: <FaCommentDots /> },
+          { key: 'reports', label: t('demo_sidebarReports'), icon: <FaFileLines /> },
         ]}
       />
 
       <UI.SidebarSection
-        title="Administration"
+        title={t('demo_sidebarAdministration')}
         items={[
-          { key: 'user-management', label: 'User Management', icon: <FaUsers /> },
+          { key: 'user-management', label: t('demo_sidebarUserManagement'), icon: <FaUsers /> },
           {
             key: 'settings',
-            label: 'Settings',
+            label: t('demo_sidebarSettings'),
             icon: <FaGear />,
             active: view === 'settings',
             onClick: () => onChange('settings'),
@@ -65,14 +67,15 @@ function DemoSidebar({ view, onChange }: { view: DemoView; onChange: (next: Demo
 }
 
 function DemoTopbar() {
+  const { t } = useTranslation()
   return (
     <div className="flex items-center justify-between gap-3">
-      <UI.TopbarSearch placeholder="Search something..." />
+      <UI.TopbarSearch placeholder={t('demo_topbarSearchPlaceholder')} />
       <UI.TopbarActions
         actions={[
-          <UI.IconButton icon={<FaBell />} key="bell" label="Notifications" />,
-          <UI.IconButton icon={<FaCommentDots />} key="messages" label="Messages" />,
-          <UI.IconButton icon={<FaMoon />} key="theme" label="Theme" />,
+          <UI.IconButton icon={<FaBell />} key="bell" label={t('demo_topbarNotifications')} />,
+          <UI.IconButton icon={<FaCommentDots />} key="messages" label={t('demo_topbarMessages')} />,
+          <UI.IconButton icon={<FaMoon />} key="theme" label={t('demo_topbarTheme')} />,
         ]}
       />
     </div>
@@ -80,15 +83,16 @@ function DemoTopbar() {
 }
 
 function SettingsDemo() {
+  const { t } = useTranslation()
   return (
     <UI.Grid columns={2} gap={16}>
-      <UI.Card title="Account Tabs">
+      <UI.Card title={t('demo_accountTabs')}>
         <UI.Tabs
           activeKey="profile"
           items={[
-            { key: 'profile', label: 'My Profile' },
-            { key: 'security', label: 'Password & Security' },
-            { key: 'team', label: 'Teams' },
+            { key: 'profile', label: t('demo_myProfile') },
+            { key: 'security', label: t('demo_passwordSecurity') },
+            { key: 'team', label: t('demo_teams') },
           ]}
           onValueChange={() => undefined}
         />
@@ -96,27 +100,27 @@ function SettingsDemo() {
 
       <UI.Stack>
         <UI.ProfileInfoCard
-          action={<UI.Button size="sm" variant="secondary">Edit</UI.Button>}
-          title="My Profile"
+          action={<UI.Button size="sm" variant="secondary">{t('demo_edit')}</UI.Button>}
+          title={t('demo_myProfile')}
         >
           <div className="flex items-center gap-3">
             <UI.Avatar size="lg" src="https://picsum.photos/96/96" />
             <UI.Stack gapClassName="gap-1">
-              <UI.Text>UI/UX Designer</UI.Text>
-              <UI.Text tone="muted">Leeds, United Kingdom</UI.Text>
+              <UI.Text>{t('demo_uiUxDesigner')}</UI.Text>
+              <UI.Text tone="muted">{t('demo_location')}</UI.Text>
             </UI.Stack>
           </div>
         </UI.ProfileInfoCard>
 
         <UI.ProfileInfoCard
-          action={<UI.Button size="sm" variant="secondary">Edit</UI.Button>}
-          title="Personal Information"
+          action={<UI.Button size="sm" variant="secondary">{t('demo_edit')}</UI.Button>}
+          title={t('demo_personalInfo')}
         >
           <UI.Grid columns={2} gap={10}>
-            <UI.Text tone="muted">First Name: Austin</UI.Text>
-            <UI.Text tone="muted">Last Name: Martin</UI.Text>
-            <UI.Text tone="muted">Email: austinmartin@gmail.com</UI.Text>
-            <UI.Text tone="muted">Phone: +09-345-346-46</UI.Text>
+            <UI.Text tone="muted">{t('demo_firstName')}: Austin</UI.Text>
+            <UI.Text tone="muted">{t('demo_lastName')}: Martin</UI.Text>
+            <UI.Text tone="muted">{t('demo_email')}: austinmartin@gmail.com</UI.Text>
+            <UI.Text tone="muted">{t('demo_phone')}: +09-345-346-46</UI.Text>
           </UI.Grid>
         </UI.ProfileInfoCard>
       </UI.Stack>
@@ -125,9 +129,10 @@ function SettingsDemo() {
 }
 
 function ActivityDemo() {
+  const { t } = useTranslation()
   return (
     <UI.Grid columns={2} gap={16}>
-      <UI.Card title="Members">
+      <UI.Card title={t('demo_members')}>
         <UI.ActivityMemberList
           members={[
             { id: '1', name: 'Gretchen Kenter', role: 'Product Manager', checked: true, count: 24 },
@@ -138,18 +143,18 @@ function ActivityDemo() {
         />
       </UI.Card>
       <UI.Card
-        actions={<UI.Button size="sm">Upload File</UI.Button>}
+        actions={<UI.Button size="sm">{t('demo_uploadFile')}</UI.Button>}
         title={
           <div className="flex items-center gap-2">
             <FaMagnifyingGlass className="text-slate-400" />
-            <span>Activity Feed</span>
+            <span>{t('demo_activityFeed')}</span>
           </div>
         }
       >
         <UI.Flex align="center" gap={8} wrap="wrap">
-          <UI.StatPill label="All" value={3} />
-          <UI.StatPill label="Channel" value={12} />
-          <UI.StatPill label="Groups" value={6} />
+          <UI.StatPill label={t('demo_statAll')} value={3} />
+          <UI.StatPill label={t('demo_statChannel')} value={12} />
+          <UI.StatPill label={t('demo_statGroups')} value={6} />
         </UI.Flex>
         <UI.Spacer size={12} />
         <UI.ActivityTimeline
@@ -165,14 +170,14 @@ function ActivityDemo() {
 }
 
 export function DemoPage() {
+  const { t } = useTranslation()
   const [view, setView] = useState<DemoView>('settings')
 
   return (
     <div className="space-y-4">
-      <UI.Card title="Demo Page">
+      <UI.Card title={t('demo_pageTitle')}>
         <UI.Paragraph>
-          Демо-экран собран из существующих компонентов UI Kit по мотивам референсов
-          Settings и Activity Feed.
+          {t('demo_pageDescription')}
         </UI.Paragraph>
       </UI.Card>
 

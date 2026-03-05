@@ -3,13 +3,12 @@ import { useTranslation } from 'react-i18next'
 import * as UI from '../components'
 import { componentGroups } from './componentDocs'
 
-const languageOptions = [
-  { label: 'Русский', value: 'ru' },
-  { label: 'English', value: 'en' },
-]
-
 export function DocsLayout() {
   const { t, i18n } = useTranslation()
+  const languageOptions = [
+    { label: t('layout_langRu'), value: 'ru' },
+    { label: t('layout_langEn'), value: 'en' },
+  ]
 
   return (
     <div className="min-h-screen bg-[#eef1f8]">
@@ -44,7 +43,7 @@ export function DocsLayout() {
                 end
                 to="/"
               >
-                {t('layout_welcome')}
+                {t('layout_navWelcome')}
               </NavLink>
 
               <NavLink
@@ -57,14 +56,14 @@ export function DocsLayout() {
                 }
                 to="/demo"
               >
-                {t('layout_demo')}
+                {t('layout_navDemo')}
               </NavLink>
             </div>
 
             {componentGroups.map((group) => (
               <section key={group.key} className="space-y-1.5">
                 <h3 className="px-2 text-xs uppercase tracking-wide text-slate-400">
-                  {group.title}
+                  {t('docs_group_' + group.key, { defaultValue: group.title })}
                 </h3>
                 <div className="space-y-1">
                   {group.items.map((item) => (
@@ -79,7 +78,7 @@ export function DocsLayout() {
                       }
                       to={`/components/${item.slug}`}
                     >
-                      {item.name}
+                      {t('docs_' + item.slug + '_name', { defaultValue: item.name })}
                     </NavLink>
                   ))}
                 </div>

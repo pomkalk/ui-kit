@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router-dom'
 import { componentDocsBySlug } from './componentDocs'
 import type { ComponentPropDoc } from './types'
@@ -8,9 +9,18 @@ interface ExampleBlockProps {
   description: string
   code: string
   preview: ReactNode
+  showCodeLabel: string
+  hideCodeLabel: string
 }
 
-function ExampleBlock({ title, description, code, preview }: ExampleBlockProps) {
+function ExampleBlock({
+  title,
+  description,
+  code,
+  preview,
+  showCodeLabel,
+  hideCodeLabel,
+}: ExampleBlockProps) {
   const [showCode, setShowCode] = useState(false)
 
   return (
@@ -25,7 +35,7 @@ function ExampleBlock({ title, description, code, preview }: ExampleBlockProps) 
           onClick={() => setShowCode((value) => !value)}
           type="button"
         >
-          {showCode ? 'Скрыть код' : 'Показать код'}
+          {showCode ? hideCodeLabel : showCodeLabel}
         </button>
       </div>
 
@@ -65,26 +75,42 @@ const fallbackPropDocs: ComponentPropDoc[] = [
 
 interface PropsDocsBlockProps {
   propDocs?: ComponentPropDoc[]
+  propsTitle: string
+  propNameLabel: string
+  propTypeLabel: string
+  propDescriptionLabel: string
+  propRequiredLabel: string
+  propDefaultLabel: string
+  yesLabel: string
+  noLabel: string
 }
 
-function PropsDocsBlock({ propDocs }: PropsDocsBlockProps) {
+function PropsDocsBlock({
+  propDocs,
+  propsTitle,
+  propNameLabel,
+  propTypeLabel,
+  propDescriptionLabel,
+  propRequiredLabel,
+  propDefaultLabel,
+  yesLabel,
+  noLabel,
+}: PropsDocsBlockProps) {
   const rows = propDocs && propDocs.length > 0 ? propDocs : fallbackPropDocs
 
   return (
     <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <h3 className="mb-3 text-base font-semibold text-slate-900">
-        Документация по пропсам
-      </h3>
+      <h3 className="mb-3 text-base font-semibold text-slate-900">{propsTitle}</h3>
 
       <div className="overflow-x-auto rounded-lg border border-slate-200">
         <table className="w-full min-w-[680px] text-left text-sm">
           <thead className="bg-slate-50 text-slate-600">
             <tr>
-              <th className="px-3 py-2 font-medium">Проп</th>
-              <th className="px-3 py-2 font-medium">Тип</th>
-              <th className="px-3 py-2 font-medium">Описание</th>
-              <th className="px-3 py-2 font-medium">Обязательный</th>
-              <th className="px-3 py-2 font-medium">По умолчанию</th>
+              <th className="px-3 py-2 font-medium">{propNameLabel}</th>
+              <th className="px-3 py-2 font-medium">{propTypeLabel}</th>
+              <th className="px-3 py-2 font-medium">{propDescriptionLabel}</th>
+              <th className="px-3 py-2 font-medium">{propRequiredLabel}</th>
+              <th className="px-3 py-2 font-medium">{propDefaultLabel}</th>
             </tr>
           </thead>
           <tbody>
@@ -94,7 +120,7 @@ function PropsDocsBlock({ propDocs }: PropsDocsBlockProps) {
                 <td className="px-3 py-2 font-mono text-xs text-slate-600">{prop.type}</td>
                 <td className="px-3 py-2 text-slate-700">{prop.description}</td>
                 <td className="px-3 py-2 text-slate-600">
-                  {prop.required ? 'Да' : 'Нет'}
+                  {prop.required ? yesLabel : noLabel}
                 </td>
                 <td className="px-3 py-2 font-mono text-xs text-slate-600">
                   {prop.defaultValue ?? '-'}
@@ -109,6 +135,7 @@ function PropsDocsBlock({ propDocs }: PropsDocsBlockProps) {
 }
 
 export function ComponentPage() {
+  const { t } = useTranslation()
   const { slug } = useParams<{ slug: string }>()
 
   if (!slug || !componentDocsBySlug[slug]) {
@@ -116,25 +143,47 @@ export function ComponentPage() {
   }
 
   const doc = componentDocsBySlug[slug]
+  const nameKey = 'docs_' + slug + '_name'
+  const descKey = 'docs_' + slug + '_description'
 
   return (
     <div className="space-y-4">
       <div className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h1 className="text-2xl font-semibold text-slate-900">{doc.name}</h1>
-        <p className="mt-2 text-sm leading-6 text-slate-600">{doc.description}</p>
+        <h1 className="text-2xl font-semibold text-slate-900">
+          {t(nameKey, { defaultValue: doc.name })}
+        </h1>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          {t(descKey, { defaultValue: doc.description })}
+        </p>
       </div>
 
-      {doc.examples.map((item) => (
-        <ExampleBlock
-          key={item.title}
-          code={item.code}
-          description={item.description}
-          preview={item.preview}
-          title={item.title}
-        />
-      ))}
+      {doc.examples.map((item, index) => {
+        const exTitleKey = `docs_${slug}_ex_${index}_title`
+        const exDescKey = `docs_${slug}_ex_${index}_description`
+        return (
+          <ExampleBlock
+            key={item.title}
+            code={item.code}
+            description={t(exDescKey, { defaultValue: item.description })}
+            hideCodeLabel={t('docs_hideCode')}
+            preview={item.preview}
+            showCodeLabel={t('docs_showCode')}
+            title={t(exTitleKey, { defaultValue: item.title })}
+          />
+        )
+      })}
 
-      <PropsDocsBlock propDocs={doc.propDocs} />
+      <PropsDocsBlock
+        noLabel={t('docs_no')}
+        propDefaultLabel={t('docs_propDefault')}
+        propDescriptionLabel={t('docs_propDescription')}
+        propDocs={doc.propDocs}
+        propNameLabel={t('docs_propName')}
+        propRequiredLabel={t('docs_propRequired')}
+        propTypeLabel={t('docs_propType')}
+        propsTitle={t('docs_propsTitle')}
+        yesLabel={t('docs_yes')}
+      />
     </div>
   )
 }
