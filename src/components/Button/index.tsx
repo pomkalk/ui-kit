@@ -27,7 +27,7 @@ export function Button({
     primary:
       'bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700 active:shadow-inner',
     secondary:
-      'bg-blue-50 text-slate-800 border border-slate-200 hover:bg-slate-50 active:bg-slate-100 active:shadow-inner',
+      'border border-slate-300 bg-white text-slate-700 shadow-[0_1px_0_rgba(15,23,42,0.04)] hover:border-slate-400 hover:bg-slate-50 hover:text-slate-800 active:border-slate-500 active:bg-slate-100 active:text-slate-900 active:shadow-inner',
     ghost:
       'bg-transparent text-slate-700 hover:bg-slate-100 active:bg-slate-200 active:shadow-inner',
     danger:

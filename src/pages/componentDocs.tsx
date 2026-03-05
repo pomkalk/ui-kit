@@ -202,6 +202,22 @@ const docs: ComponentDoc[] = [
         <UI.Button variant="primary">Сохранить</UI.Button>,
       ),
       ex(
+        'Все варианты кнопки',
+        'Набор основных визуальных типов: primary, secondary, ghost, danger.',
+        `<Flex gap={8} wrap="wrap">
+  <Button variant="primary">Primary</Button>
+  <Button variant="secondary">Secondary</Button>
+  <Button variant="ghost">Ghost</Button>
+  <Button variant="danger">Danger</Button>
+</Flex>`,
+        <UI.Flex gap={8} wrap="wrap">
+          <UI.Button variant="primary">Primary</UI.Button>
+          <UI.Button variant="secondary">Secondary</UI.Button>
+          <UI.Button variant="ghost">Ghost</UI.Button>
+          <UI.Button variant="danger">Danger</UI.Button>
+        </UI.Flex>,
+      ),
+      ex(
         'Кнопка с иконкой',
         'Добавление визуального контекста через левую иконку.',
         `<Button variant="secondary" leftIcon={<span>+</span>}>Добавить</Button>`,
@@ -212,10 +228,26 @@ const docs: ComponentDoc[] = [
       ex(
         'Состояние loading',
         'Кнопка в процессе выполнения действия становится неактивной и показывает состояние загрузки.',
-        `<Button variant="primary" isLoading>Сохранить</Button>`,
-        <UI.Button isLoading variant="primary">
-          Сохранить
-        </UI.Button>,
+        `<Flex gap={8} wrap="wrap">
+  <Button variant="primary" isLoading>Primary</Button>
+  <Button variant="secondary" isLoading>Secondary</Button>
+  <Button variant="ghost" isLoading>Ghost</Button>
+  <Button variant="danger" isLoading>Danger</Button>
+</Flex>`,
+        <UI.Flex gap={8} wrap="wrap">
+          <UI.Button isLoading variant="primary">
+            Primary
+          </UI.Button>
+          <UI.Button isLoading variant="secondary">
+            Secondary
+          </UI.Button>
+          <UI.Button isLoading variant="ghost">
+            Ghost
+          </UI.Button>
+          <UI.Button isLoading variant="danger">
+            Danger
+          </UI.Button>
+        </UI.Flex>,
       ),
     ],
     propDocs: [
