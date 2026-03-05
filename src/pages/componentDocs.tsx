@@ -1,6 +1,11 @@
 import { useState, type ReactNode } from 'react'
 import * as UI from '../components'
-import type { ComponentDoc, ComponentExample, ComponentGroup } from './types'
+import type {
+  ComponentDoc,
+  ComponentExample,
+  ComponentGroup,
+  ComponentPropDoc,
+} from './types'
 
 const noop = () => undefined
 
@@ -86,6 +91,16 @@ function ex(
   return { title, description, code: code(snippet), preview }
 }
 
+function pd(
+  name: string,
+  type: string,
+  description: string,
+  required = false,
+  defaultValue?: string,
+): ComponentPropDoc {
+  return { name, type, description, required, defaultValue }
+}
+
 const docs: ComponentDoc[] = [
   {
     slug: 'button',
@@ -116,6 +131,13 @@ const docs: ComponentDoc[] = [
           Сохранить
         </UI.Button>,
       ),
+    ],
+    propDocs: [
+      pd('variant', "'primary' | 'secondary' | 'ghost' | 'danger'", 'Визуальный вариант кнопки.', false, "'primary'"),
+      pd('size', "'sm' | 'md' | 'lg'", 'Размер кнопки.', false, "'md'"),
+      pd('leftIcon', 'ReactNode', 'Иконка слева от текста.', false),
+      pd('rightIcon', 'ReactNode', 'Иконка справа от текста.', false),
+      pd('isLoading', 'boolean', 'Показывает спиннер и блокирует кнопку.', false, 'false'),
     ],
   },
   {
@@ -473,6 +495,14 @@ const docs: ComponentDoc[] = [
         <UI.Select isInvalid options={[{ label: 'Выберите', value: '' }]} />,
       ),
     ],
+    propDocs: [
+      pd('options', 'SelectOption[]', 'Список доступных опций.', true),
+      pd('value', 'string', 'Контролируемое значение.', false),
+      pd('defaultValue', 'string', 'Значение по умолчанию для неконтролируемого режима.', false),
+      pd('placeholder', 'string', 'Текст-плейсхолдер при пустом выборе.', false, "'Select option'"),
+      pd('isInvalid', 'boolean', 'Ошибка валидации поля.', false, 'false'),
+      pd('onValueChange', '(value: string) => void', 'Коллбек при выборе значения.', false),
+    ],
   },
   {
     slug: 'autocomplete',
@@ -545,6 +575,14 @@ const docs: ComponentDoc[] = [
           ]}
         />,
       ),
+    ],
+    propDocs: [
+      pd('options', 'AutocompleteOption[]', 'Исходный список вариантов для поиска.', true),
+      pd('value', 'string', 'Контролируемое значение input.', false),
+      pd('defaultValue', 'string', 'Начальное значение в неконтролируемом режиме.', false),
+      pd('allowClear', 'boolean', 'Показывает кнопку очистки поля.', false, 'false'),
+      pd('noOptionsText', 'string', 'Текст, когда нет совпадений.', false, "'No options'"),
+      pd('onSelect', '(option) => void', 'Коллбек выбора конкретной опции.', false),
     ],
   },
   {
@@ -646,6 +684,14 @@ const docs: ComponentDoc[] = [
         <UI.DatePicker max="2026-12-31" min="2026-01-01" />,
       ),
     ],
+    propDocs: [
+      pd('value', 'string (YYYY-MM-DD)', 'Контролируемая выбранная дата.', false),
+      pd('defaultValue', 'string (YYYY-MM-DD)', 'Дата по умолчанию.', false),
+      pd('min', 'string (YYYY-MM-DD)', 'Минимальная допустимая дата.', false),
+      pd('max', 'string (YYYY-MM-DD)', 'Максимальная допустимая дата.', false),
+      pd('placeholder', 'string', 'Текст в поле при пустом значении.', false, "'Select date'"),
+      pd('onValueChange', '(value: string) => void', 'Коллбек при выборе даты.', false),
+    ],
   },
   {
     slug: 'time-picker',
@@ -686,6 +732,11 @@ const docs: ComponentDoc[] = [
         <UI.FileInput accept="image/*" />,
       ),
     ],
+    propDocs: [
+      pd('accept', 'string', 'Ограничение типов файлов.', false),
+      pd('isInvalid', 'boolean', 'Подсвечивает поле как невалидное.', false, 'false'),
+      pd('multiple', 'boolean', 'Для одиночного FileInput не используется.', false),
+    ],
   },
   {
     slug: 'multiple-file-input',
@@ -706,6 +757,11 @@ const docs: ComponentDoc[] = [
         `<MultipleFileInput accept="image/*" />`,
         <UI.MultipleFileInput accept="image/*" />,
       ),
+    ],
+    propDocs: [
+      pd('accept', 'string', 'Ограничение типов файлов.', false),
+      pd('isInvalid', 'boolean', 'Подсвечивает поле как невалидное.', false, 'false'),
+      pd('multiple', 'true', 'Всегда включено в этом компоненте.', true, 'true'),
     ],
   },
   {
