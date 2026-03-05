@@ -218,6 +218,104 @@ const docs: ComponentDoc[] = [
         </UI.Flex>,
       ),
       ex(
+        'Визуальные типы',
+        'Основные визуальные типы: primary, default, dashed, text, link.',
+        `<Flex gap={8} wrap="wrap">
+  <Button type="primary">Primary</Button>
+  <Button type="default">Default</Button>
+  <Button type="dashed">Dashed</Button>
+  <Button type="text">Text</Button>
+  <Button type="link">Link</Button>
+</Flex>`,
+        <UI.Flex gap={8} wrap="wrap">
+          <UI.Button type="primary">Primary</UI.Button>
+          <UI.Button type="default">Default</UI.Button>
+          <UI.Button type="dashed">Dashed</UI.Button>
+          <UI.Button type="text">Text</UI.Button>
+          <UI.Button type="link">Link</UI.Button>
+        </UI.Flex>,
+      ),
+      ex(
+        'Danger и Ghost',
+        'Комбинации модификаторов danger и ghost.',
+        `<Flex gap={8} wrap="wrap">
+  <Button danger>Danger</Button>
+  <Button type="default" danger>Danger Default</Button>
+  <Button ghost type="primary">Ghost Primary</Button>
+  <Button ghost danger>Ghost Danger</Button>
+</Flex>`,
+        <UI.Flex gap={8} wrap="wrap">
+          <UI.Button danger>Danger</UI.Button>
+          <UI.Button danger type="default">
+            Danger Default
+          </UI.Button>
+          <UI.Button ghost type="primary">
+            Ghost Primary
+          </UI.Button>
+          <UI.Button danger ghost>
+            Ghost Danger
+          </UI.Button>
+        </UI.Flex>,
+      ),
+      ex(
+        'Форма и блок',
+        'Круглая, pill-кнопка и блочная кнопка на всю ширину.',
+        `<Flex direction="column" gap={8}>
+  <Flex gap={8}>
+    <Button shape="circle" icon={<span>+</span>} aria-label="Add" />
+    <Button shape="round">Round button</Button>
+  </Flex>
+  <Button block type="default">Block button</Button>
+</Flex>`,
+        <UI.Flex direction="column" gap={8}>
+          <UI.Flex gap={8}>
+            <UI.Button aria-label="Add" icon={<span>+</span>} shape="circle" />
+            <UI.Button shape="round">Round button</UI.Button>
+          </UI.Flex>
+          <UI.Button block type="default">
+            Block button
+          </UI.Button>
+        </UI.Flex>,
+      ),
+      ex(
+        'Размеры и htmlType',
+        'Размеры small/middle/large и нативные html типы кнопки.',
+        `<Flex direction="column" gap={8}>
+  <Flex align="center" gap={8} wrap="wrap">
+    <Button size="small">Small</Button>
+    <Button size="middle">Middle</Button>
+    <Button size="large">Large</Button>
+  </Flex>
+  <form onSubmit={(e) => e.preventDefault()}>
+    <Flex gap={8} wrap="wrap">
+      <Button htmlType="submit" type="primary">Submit</Button>
+      <Button htmlType="reset" type="default">Reset</Button>
+      <Button htmlType="button" type="text">Button</Button>
+    </Flex>
+  </form>
+</Flex>`,
+        <UI.Flex direction="column" gap={8}>
+          <UI.Flex align="center" gap={8} wrap="wrap">
+            <UI.Button size="small">Small</UI.Button>
+            <UI.Button size="middle">Middle</UI.Button>
+            <UI.Button size="large">Large</UI.Button>
+          </UI.Flex>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <UI.Flex gap={8} wrap="wrap">
+              <UI.Button htmlType="submit" type="primary">
+                Submit
+              </UI.Button>
+              <UI.Button htmlType="reset" type="default">
+                Reset
+              </UI.Button>
+              <UI.Button htmlType="button" type="text">
+                Button
+              </UI.Button>
+            </UI.Flex>
+          </form>
+        </UI.Flex>,
+      ),
+      ex(
         'Кнопка с иконкой',
         'Добавление визуального контекста через левую иконку.',
         `<Button variant="secondary" leftIcon={<span>+</span>}>Добавить</Button>`,
@@ -251,11 +349,19 @@ const docs: ComponentDoc[] = [
       ),
     ],
     propDocs: [
-      pd('variant', "'primary' | 'secondary' | 'ghost' | 'danger'", 'Визуальный вариант кнопки.', false, "'primary'"),
-      pd('size', "'sm' | 'md' | 'lg'", 'Размер кнопки.', false, "'md'"),
+      pd('type', "'primary' | 'default' | 'dashed' | 'text' | 'link'", 'Визуальный тип кнопки.', false, "'primary'"),
+      pd('htmlType', "'button' | 'submit' | 'reset'", 'Нативный тип button-элемента.', false, "'button'"),
+      pd('danger', 'boolean', 'Опасное действие (красная тема).', false, 'false'),
+      pd('ghost', 'boolean', 'Прозрачный стиль кнопки с рамкой.', false, 'false'),
+      pd('block', 'boolean', 'Растянуть кнопку на всю ширину контейнера.', false, 'false'),
+      pd('shape', "'default' | 'circle' | 'round'", 'Форма кнопки.', false, "'default'"),
+      pd('size', "'small' | 'middle' | 'large' | 'sm' | 'md' | 'lg'", 'Размер кнопки (новый и legacy формат).', false, "'md'"),
+      pd('icon', 'ReactNode', 'Иконка слева (основной проп).', false),
       pd('leftIcon', 'ReactNode', 'Иконка слева от текста.', false),
       pd('rightIcon', 'ReactNode', 'Иконка справа от текста.', false),
-      pd('isLoading', 'boolean', 'Показывает спиннер и блокирует кнопку.', false, 'false'),
+      pd('loading', 'boolean', 'Показывает спиннер и блокирует кнопку.', false, 'false'),
+      pd('variant', "'primary' | 'secondary' | 'ghost' | 'danger'", 'Legacy визуальный проп для обратной совместимости.', false, "'primary'"),
+      pd('isLoading', 'boolean', 'Legacy loading-проп для обратной совместимости.', false, 'false'),
     ],
   },
   {
