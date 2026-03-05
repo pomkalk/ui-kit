@@ -11,20 +11,35 @@ export function DocsLayout() {
             <p className="text-xs text-slate-500">Каталог компонентов</p>
           </div>
 
-          <nav className="space-y-4">
-            <NavLink
-              className={({ isActive }) =>
-                `block rounded-lg px-3 py-2 text-sm transition ${
-                  isActive
-                    ? 'bg-blue-50 font-medium text-blue-700'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`
-              }
-              end
-              to="/"
-            >
-              Приветствие
-            </NavLink>
+          <nav className="space-y-3">
+            <div className="space-y-1">
+              <NavLink
+                className={({ isActive }) =>
+                  `block rounded-lg px-3 py-2 text-sm transition ${
+                    isActive
+                      ? 'bg-blue-50 font-medium text-blue-700'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  }`
+                }
+                end
+                to="/"
+              >
+                Приветствие
+              </NavLink>
+
+              <NavLink
+                className={({ isActive }) =>
+                  `block rounded-lg px-3 py-2 text-sm transition ${
+                    isActive
+                      ? 'bg-blue-50 font-medium text-blue-700'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  }`
+                }
+                to="/demo"
+              >
+                Demo
+              </NavLink>
+            </div>
 
             {componentGroups.map((group) => (
               <section key={group.key} className="space-y-1.5">
